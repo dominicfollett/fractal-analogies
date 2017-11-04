@@ -44,7 +44,7 @@ def transform_image(ctx, queue, abst, image):
     output_buffer = cl.Buffer(ctx, mf.WRITE_ONLY, 8 * image.shape[0] * image.shape[1] * np.dtype('float32').itemsize)
 
     # Load program kernel.
-    kernel = open("./opencl-kernels/parallel-transforms.c", "r")
+    kernel = open("./opencl_kernels/parallel-transforms.c", "r")
 
     prg = cl.Program(ctx, kernel.read()).build(options=[
         '-D', 'width=%s' % image.shape[0],
