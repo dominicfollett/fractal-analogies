@@ -33,11 +33,8 @@ def segment_and_transform(source_image, destination_segments, abst=92):
     return A, B
 
 def transform_image(ctx, queue, abst, image):
-    # We want to transform an array of images over all affine transformations
-    #  and abstraction levels. We can do almost any abstraction level because
-    #  we can use pillow to adjust the image width and height. (Note that
-    # this might not work on real-life input data). Lets first do transforms
-    # for one image.
+    # Transform an array of images over all affine transformations
+    #  for a given abstraction levels.
     # --------------------------------------------------------------------------
     mf = cl.mem_flags
     image_buffer = cl.Buffer(ctx, mf.READ_ONLY | mf.COPY_HOST_PTR, hostbuf=image)
@@ -52,7 +49,7 @@ def transform_image(ctx, queue, abst, image):
         '-D', 'half_width=%f' % ((abst - 1) / 2.0)])
 
     # TODO Either allow OpenCL to do something clever or calculate local size yourself.
-    trans = prg.parallel_transforms(queue, (184, 184), None, image_buffer, output_buffer)
+    trans = prg.parallel_transforms(queue, image.shape, None, image_buffer, output_buffer)
 
     # --------------------------------------------------------------------------
     trans.wait()
