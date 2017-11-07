@@ -2,11 +2,11 @@ import numpy as np
 import cv2
 from matplotlib import pyplot as plt
 
-img1 = cv2.imread('./images/complexLarge.png',0)
-img2 = cv2.imread('./images/complexSmall.png',0)
+img1 = cv2.imread('../images/2.png', 0)
+img2 = cv2.imread('../images/1.png', 0)
 
 # Initiate STAR detector
-orb = cv2.ORB_create(WTA_K=2, nfeatures=1000, nlevels=8, scaleFactor=1.2, patchSize=100, edgeThreshold=100)
+orb = cv2.ORB_create(WTA_K=2, nfeatures=1000, nlevels=8, scaleFactor=1.2, patchSize=31, edgeThreshold=31)
 
 # find the keypoints with ORB
 kp1 = orb.detect(img1, None)

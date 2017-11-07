@@ -4,36 +4,47 @@
 !_TAG_PROGRAM_NAME	Exuberant Ctags	//
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
 !_TAG_PROGRAM_VERSION	5.8	//
+A_keypoints	../segment_search.py	/^A_keypoints = orb.detect(img1, None)$/;"	kind:variable	line:29
+Image	../segment_search.py	/^from PIL import Image$/;"	kind:namespace	line:11
+OrderedDict	../utils/utils.py	/^from collections import OrderedDict$/;"	kind:namespace	line:8
+__all__	../utils/__init__.py	/^__all__ = ["get_ortho", "print_info", "transform_image"]$/;"	kind:variable	line:3
+__init__.py	../utils/__init__.py	1;"	kind:file	line:1
+abst	../segment_search.py	/^abst = 92$/;"	kind:variable	line:14
 bf	../other_algorithms/orb_example.py	/^bf = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)$/;"	kind:variable	line:25
+bf	../segment_search.py	/^            bf = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)$/;"	kind:variable	line:56
+cl	../utils/utils.py	/^import pyopencl as cl$/;"	kind:namespace	line:7
 cv2	../other_algorithms/orb_example.py	/^import cv2$/;"	kind:namespace	line:2
-cv2	../other_algorithms/sift.py	/^import cv2$/;"	kind:namespace	line:1
-cv2	../other_algorithms/surf.py	/^import cv2$/;"	kind:namespace	line:1
-cv2	../segment_search.py	/^import cv2$/;"	kind:namespace	line:5
-gray	../other_algorithms/sift.py	/^gray= cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)$/;"	kind:variable	line:5
-img	../other_algorithms/sift.py	/^img = cv2.imread('.\/images\/1.png')$/;"	kind:variable	line:4
-img	../other_algorithms/sift.py	/^img=cv2.drawKeypoints(gray,kp,flags=cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)$/;"	kind:variable	line:10
-img	../other_algorithms/surf.py	/^img = cv2.imread('.\/images\/1.png',0)$/;"	kind:variable	line:4
-img1	../other_algorithms/orb_example.py	/^img1 = cv2.imread('.\/images\/complexLarge.png',0)$/;"	kind:variable	line:5
-img1	../segment_search.py	/^img1 = cv2.imread('.\/images\/1.png',0)$/;"	kind:variable	line:7
-img2	../other_algorithms/orb_example.py	/^img2 = cv2.imread('.\/images\/complexSmall.png',0)$/;"	kind:variable	line:6
-img2	../other_algorithms/surf.py	/^img2 = cv2.drawKeypoints(img,kp,None,(255,0,0),4)$/;"	kind:variable	line:13
-img2	../segment_search.py	/^img2 = cv2.imread('.\/images\/4.png',0)$/;"	kind:variable	line:8
+cv2	../segment_search.py	/^import cv2$/;"	kind:namespace	line:9
+dim	../segment_search.py	/^dim = int(max_dim \/ abst)$/;"	kind:variable	line:15
+filename	../segment_search.py	/^            filename = "{}_keypoints_match_{}.png".format(i, j)$/;"	kind:variable	line:67
+get_ortho	../utils/utils.py	/^def get_ortho():$/;"	kind:function	line:80
+img1	../other_algorithms/orb_example.py	/^img1 = cv2.imread('..\/images\/2.png', 0)$/;"	kind:variable	line:5
+img1	../segment_search.py	/^img1 = cv2.imread('.\/images\/1.png', 0) # A$/;"	kind:variable	line:19
+img2	../other_algorithms/orb_example.py	/^img2 = cv2.imread('..\/images\/1.png', 0)$/;"	kind:variable	line:6
+img2	../segment_search.py	/^img2 = cv2.imread('.\/images\/4.png', 0) # B$/;"	kind:variable	line:20
 img3	../other_algorithms/orb_example.py	/^img3 = cv2.drawMatches(img1,kp1,img2,kp2,matches[:10], flags=2, outImg=None)$/;"	kind:variable	line:34
-kp	../other_algorithms/sift.py	/^kp = sift.detect(gray,None)$/;"	kind:variable	line:8
+img3	../segment_search.py	/^            img3 = cv2.drawMatches(img1,A_keypoints,segment,segment_keypoints,matches[:10], flags=2, outImg=None)$/;"	kind:variable	line:65
 kp1	../other_algorithms/orb_example.py	/^kp1 = orb.detect(img1, None)$/;"	kind:variable	line:12
 kp2	../other_algorithms/orb_example.py	/^kp2 = orb.detect(img2, None)$/;"	kind:variable	line:13
 matches	../other_algorithms/orb_example.py	/^matches = bf.match(des1,des2)$/;"	kind:variable	line:28
 matches	../other_algorithms/orb_example.py	/^matches = sorted(matches, key = lambda x:x.distance)$/;"	kind:variable	line:31
+matches	../segment_search.py	/^            matches = bf.match(A_descriptors,segment_descriptors)$/;"	kind:variable	line:59
+matches	../segment_search.py	/^            matches = sorted(matches, key = lambda x:x.distance)$/;"	kind:variable	line:62
+math	../utils/utils.py	/^import math$/;"	kind:namespace	line:5
+max_dim	../segment_search.py	/^max_dim = 184$/;"	kind:variable	line:13
 np	../other_algorithms/orb_example.py	/^import numpy as np$/;"	kind:namespace	line:1
-np	../other_algorithms/sift.py	/^import numpy as np$/;"	kind:namespace	line:2
-np	../other_algorithms/surf.py	/^import numpy as np$/;"	kind:namespace	line:2
-np	../segment_search.py	/^import numpy as np$/;"	kind:namespace	line:4
-orb	../other_algorithms/orb_example.py	/^orb = cv2.ORB_create(WTA_K=2, nfeatures=1000, nlevels=8, scaleFactor=1.2, patchSize=100, edgeThreshold=100)$/;"	kind:variable	line:9
-orb	../segment_search.py	/^orb = cv2.ORB_create()$/;"	kind:variable	line:11
+np	../segment_search.py	/^import numpy as np$/;"	kind:namespace	line:8
+np	../utils/utils.py	/^import numpy as np$/;"	kind:namespace	line:4
+orb	../other_algorithms/orb_example.py	/^orb = cv2.ORB_create(WTA_K=2, nfeatures=1000, nlevels=8, scaleFactor=1.2, patchSize=31, edgeThreshold=31)$/;"	kind:variable	line:9
+orb	../segment_search.py	/^orb = cv2.ORB_create(WTA_K=2, nfeatures=1000, nlevels=8, scaleFactor=1.2, patchSize=4, edgeThreshold=4)$/;"	kind:variable	line:26
 orb_example.py	../other_algorithms/orb_example.py	1;"	kind:file	line:1
 plt	../other_algorithms/orb_example.py	/^from matplotlib import pyplot as plt$/;"	kind:namespace	line:3
+print_info	../utils/utils.py	/^def print_info(cl, ctx):$/;"	kind:function	line:64
+segment	../segment_search.py	/^            segment = np.asarray(transform[istart:iend, jstart:jend], dtype=np.uint8)$/;"	kind:variable	line:43
+segment_and_transform	../segment_search.py	/^from utils.utils import segment_and_transform$/;"	kind:namespace	line:10
+segment_and_transform	../utils/utils.py	/^def segment_and_transform(source_image, destination_segments, abst=92):$/;"	kind:function	line:22
+segment_keypoints	../segment_search.py	/^            segment_keypoints = orb.detect(segment, None)$/;"	kind:variable	line:46
+segment_range	../segment_search.py	/^segment_range = range(dim)$/;"	kind:variable	line:16
 segment_search.py	../segment_search.py	1;"	kind:file	line:1
-sift	../other_algorithms/sift.py	/^sift = cv2.SIFT()$/;"	kind:variable	line:7
-sift.py	../other_algorithms/sift.py	1;"	kind:file	line:1
-surf	../other_algorithms/surf.py	/^surf = cv2.SURF(34500)$/;"	kind:variable	line:8
-surf.py	../other_algorithms/surf.py	1;"	kind:file	line:1
+transform_image	../utils/utils.py	/^def transform_image(ctx, queue, abst, image):$/;"	kind:function	line:35
+utils.py	../utils/utils.py	1;"	kind:file	line:1

@@ -16,26 +16,31 @@ dim = int(max_dim / abst)
 segment_range = range(dim)
 
 
-img1 = cv2.imread('./images/1.png',0) # A
-img2 = cv2.imread('./images/4.png',0) # B
+img1 = cv2.imread('./images/1.png', 0) # A
+img2 = cv2.imread('./images/4.png', 0) # B
 
-# Segment and transform Images
-A, B = segment_and_transform(np.asarray(img1, np.float32), np.asarray(img2, np.float32), abst=abst)
+# Segment and transform Images.
+A, B = segment_and_transform(np.asarray(img1, dtype=np.float32), np.asarray(img2, dtype=np.float32), abst=abst)
 
 # Initiate STAR detector
-orb = cv2.ORB_create()
+orb = cv2.ORB_create(WTA_K=2, nfeatures=1000, nlevels=8, scaleFactor=1.2, patchSize=4, edgeThreshold=4)
 
 # Find keypoints in A
 A_keypoints = orb.detect(img1, None)
 A_keypoints, A_descriptors = orb.compute(img1, A_keypoints)
 
+#if len(A_keypoints) == 0:
+#    print( 'No features detected in A.')
+#    exit(0)
+
 # For each segmented tranformation in B
 for transform in B:
     for i in segment_range:
         for j in segment_range:
+
             istart, iend = i * abst, (i+1) * abst
             jstart, jend = j * abst, (j+1) * abst
-            segment = transform[istart:iend, jstart:jend]
+            segment = np.asarray(transform[istart:iend, jstart:jend], dtype=np.uint8)
 
             # find the keypoints in segment with ORB
             segment_keypoints = orb.detect(segment, None)
@@ -45,7 +50,7 @@ for transform in B:
 
             if len(segment_keypoints) == 0:
                 print( 'No features detected.')
-                exit(0)
+                continue
 
             # create BFMatcher object
             bf = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)
@@ -59,7 +64,7 @@ for transform in B:
             # Draw first 10 matches.
             img3 = cv2.drawMatches(img1,A_keypoints,segment,segment_keypoints,matches[:10], flags=2, outImg=None)
 
-            cv2.imwrite('orb_keypoints_match.jpg',img3)
+            filename = "{}_keypoints_match_{}.png".format(i, j)
+            cv2.imwrite(filename,img3)
 
-            exit(0)
 
