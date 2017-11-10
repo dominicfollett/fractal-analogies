@@ -15,6 +15,8 @@ abst = 92
 dim = int(max_dim / abst)
 segment_range = range(dim)
 
+MIN_MATCH_COUNT = 3
+
 def get_segment(i, j, abst, image):
     """:returns: a segment (i,j) for an abstraction level in the given image.
     
@@ -59,13 +61,18 @@ def flan_matches(source_descriptors, destination_descriptors):
     matches = flann.knnMatch(source_descriptors, destination_descriptors,k=2)
 
     # Need to draw only good matches, so create a mask
-    matchesMask = [[0,0] for i in range(len(matches))]
+    #matchesMask = [[0,0] for i in range(len(matches))]
 
     # ratio test as per Lowe's paper
-    for i,(m,n) in enumerate(matches):
+    #for i,(m,n) in enumerate(matches):
+    #    if m.distance < 0.7*n.distance:
+    #        matchesMask[i]=[1,0]
+    # store all the good matches as per Lowe's ratio test.
+    good = []
+    for m,n in matches:
         if m.distance < 0.7*n.distance:
-            matchesMask[i]=[1,0]
-    return matches, matchesMask
+            good.append(m)
+    return matches, good
 
 img1 = cv2.imread('./images/1.png', 0) # A
 img2 = cv2.imread('./images/4.png', 0) # B
@@ -101,17 +108,33 @@ for transform in B:
                 print( 'No features detected -  no matching.')
                 continue
 
-            matches, matchesMask = flan_matches(A_descriptors, segment_descriptors)
+            matches, good = flan_matches(A_descriptors, segment_descriptors)
+
             # If there are matches, determine the locality of the segment.
 
-            draw_params = dict(matchColor = (0,255,0),
-                            singlePointColor = (255,0,0),
-                            matchesMask = matchesMask,
-                            flags = 0)
+            if len(good) > MIN_MATCH_COUNT:
+                src_pts = np.float32([ A_keypoints[m.queryIdx].pt for m in good ]).reshape(-1,1,2)
+                dst_pts = np.float32([ segment_keypoints[m.trainIdx].pt for m in good ]).reshape(-1,1,2)
 
-            img3 = cv2.drawMatchesKnn(img1,A_keypoints,segment,segment_keypoints,matches,None,**draw_params)
+                M, mask = cv2.findHomography(src_pts, dst_pts, cv2.RANSAC,5.0)
+                matchesMask = mask.ravel().tolist()
 
-            filename = "{}_keypoints_match_{}.png".format(i, j)
-            cv2.imwrite(filename,img3)
+                h,w = img1.shape
+                pts = np.float32([ [0,0],[0,h-1],[w-1,h-1],[w-1,0] ]).reshape(-1,1,2)
+                dst = cv2.perspectiveTransform(pts,M)
+
+                segment = cv2.polylines(segment,[np.int32(dst)],True,255,3, cv2.LINE_AA)
+                draw_params = dict(matchColor = (0,255,0), # draw matches in green color
+                                singlePointColor = None,
+                                matchesMask = matchesMask, # draw only inliers
+                                flags = 2)
+
+                img3 = cv2.drawMatches(img1,A_keypoints,segment,segment_keypoints,good,None,**draw_params)
+            else:
+                print("Not enough matches are found - %d/%d" % (len(good),MIN_MATCH_COUNT))
+                matchesMask = None
+
+            #filename = "{}_keypoints_match_{}.png".format(i, j)
+            #cv2.imwrite(filename,img3)
     # Consider a single transformation for now.
     exit(0)
