@@ -33,7 +33,8 @@ def get_segment(i, j, abst, image):
     jstart, jend = j * abst, (j+1) * abst
     return np.asarray(transform[istart:iend, jstart:jend], dtype=np.uint8)
 
-def find_brute_force_matches(source, destination):
+def brute_force_matches(source_descriptors, destination_descriptors):
+    """ http://opencv-python-tutroals.readthedocs.io/ """ 
     # Create BFMatcher object.
     bf = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)
 
@@ -42,6 +43,29 @@ def find_brute_force_matches(source, destination):
 
     # Sort them in the order of their distance.
     return sorted(matches, key = lambda x:x.distance)
+
+def flan_matches(source_descriptors, destination_descriptors):
+    """ http://opencv-python-tutroals.readthedocs.io/ """
+    # FLANN parameters
+    FLANN_INDEX_LSH = 6
+    index_params= dict(algorithm = FLANN_INDEX_LSH,
+                   table_number = 6, # 12
+                   key_size = 12,     # 20
+                   multi_probe_level = 1) #2    search_params = dict(checks=50)   # or pass empty dictionary
+    search_params = dict(checks=50)   # or pass empty dictionary
+
+    flann = cv2.FlannBasedMatcher(index_params,search_params)
+
+    matches = flann.knnMatch(source_descriptors, destination_descriptors,k=2)
+
+    # Need to draw only good matches, so create a mask
+    matchesMask = [[0,0] for i in range(len(matches))]
+
+    # ratio test as per Lowe's paper
+    for i,(m,n) in enumerate(matches):
+        if m.distance < 0.7*n.distance:
+            matchesMask[i]=[1,0]
+    return matches, matchesMask
 
 img1 = cv2.imread('./images/1.png', 0) # A
 img2 = cv2.imread('./images/4.png', 0) # B
@@ -55,6 +79,10 @@ orb = cv2.ORB_create(WTA_K=2, nfeatures=1000, nlevels=8, scaleFactor=1.2, patchS
 # Find keypoints in A.
 A_keypoints = orb.detect(img1, None)
 A_keypoints, A_descriptors = orb.compute(img1, A_keypoints)
+
+if len(A_keypoints) == 0:
+    print( 'No features detected -  no matching.')
+    exit(0)
 
 # For each segmented tranformation in B:
 for transform in B:
@@ -73,12 +101,17 @@ for transform in B:
                 print( 'No features detected -  no matching.')
                 continue
 
+            matches, matchesMask = flan_matches(A_descriptors, segment_descriptors)
             # If there are matches, determine the locality of the segment.
 
-            # Draw first 10 matches.
-            #img3 = cv2.drawMatches(img1,A_keypoints,segment,segment_keypoints,matches[:100], flags=2, outImg=None)
+            draw_params = dict(matchColor = (0,255,0),
+                            singlePointColor = (255,0,0),
+                            matchesMask = matchesMask,
+                            flags = 0)
 
-            #filename = "{}_keypoints_match_{}.png".format(i, j)
-            #cv2.imwrite(filename,img3)
+            img3 = cv2.drawMatchesKnn(img1,A_keypoints,segment,segment_keypoints,matches,None,**draw_params)
+
+            filename = "{}_keypoints_match_{}.png".format(i, j)
+            cv2.imwrite(filename,img3)
     # Consider a single transformation for now.
     exit(0)
