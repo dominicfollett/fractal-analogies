@@ -4,51 +4,59 @@
 !_TAG_PROGRAM_NAME	Exuberant Ctags	//
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
 !_TAG_PROGRAM_VERSION	5.8	//
-A_keypoints	../segment_search.py	/^A_keypoints = orb.detect(img1, None)$/;"	kind:variable	line:80
-Image	../segment_search.py	/^from PIL import Image$/;"	kind:namespace	line:11
+A_keypoints	../segment_search.py	/^A_keypoints = orb.detect(img1, None)$/;"	kind:variable	line:102
+Image	../segment_search.py	/^from PIL import Image$/;"	kind:namespace	line:22
+MIN_MATCH_COUNT	../segment_search.py	/^MIN_MATCH_COUNT = 1$/;"	kind:variable	line:29
 OrderedDict	../utils/utils.py	/^from collections import OrderedDict$/;"	kind:namespace	line:8
 __all__	../utils/__init__.py	/^__all__ = ["get_ortho", "print_info", "transform_image"]$/;"	kind:variable	line:3
 __init__.py	../utils/__init__.py	1;"	kind:file	line:1
-abst	../segment_search.py	/^abst = 92$/;"	kind:variable	line:14
+abst	../segment_search.py	/^abst = 46$/;"	kind:variable	line:25
 bf	../other_algorithms/orb_example.py	/^bf = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)$/;"	kind:variable	line:25
-brute_force_matches	../segment_search.py	/^def brute_force_matches(source_descriptors, destination_descriptors):$/;"	kind:function	line:36
+brute_force_matches	../segment_search.py	/^def brute_force_matches(source_descriptors, destination_descriptors):$/;"	kind:function	line:49
 cl	../utils/utils.py	/^import pyopencl as cl$/;"	kind:namespace	line:7
 cv2	../other_algorithms/orb_example.py	/^import cv2$/;"	kind:namespace	line:2
-cv2	../segment_search.py	/^import cv2$/;"	kind:namespace	line:9
-dim	../segment_search.py	/^dim = int(max_dim \/ abst)$/;"	kind:variable	line:15
-draw_params	../segment_search.py	/^            draw_params = dict(matchColor = (0,255,0),$/;"	kind:variable	line:107
-filename	../segment_search.py	/^            filename = "{}_keypoints_match_{}.png".format(i, j)$/;"	kind:variable	line:114
-flags	../segment_search.py	/^                            flags = 0)$/;"	kind:variable	line:110
-flan_matches	../segment_search.py	/^def flan_matches(source_descriptors, destination_descriptors):$/;"	kind:function	line:47
+cv2	../segment_search.py	/^import cv2$/;"	kind:namespace	line:20
+dim	../segment_search.py	/^dim = int(max_dim \/ abst)$/;"	kind:variable	line:26
+draw_params	../segment_search.py	/^                draw_params = dict(matchColor = (0,255,0), # draw matches in green color$/;"	kind:variable	line:146
+dst	../segment_search.py	/^                dst = cv2.perspectiveTransform(pts,M)$/;"	kind:variable	line:143
+dst_pts	../segment_search.py	/^                dst_pts = np.float32([ segment_keypoints[m.trainIdx].pt for m in good ]).reshape(-1,1,2)$/;"	kind:variable	line:133
+filename	../segment_search.py	/^                filename = "transform_{}_keypoints_match_{}_{}.png".format(index, i, j)$/;"	kind:variable	line:152
+flags	../segment_search.py	/^                                flags = 2)$/;"	kind:variable	line:149
+flan_matches	../segment_search.py	/^def flan_matches(source_descriptors, destination_descriptors):$/;"	kind:function	line:60
 get_ortho	../utils/utils.py	/^def get_ortho():$/;"	kind:function	line:80
-get_segment	../segment_search.py	/^def get_segment(i, j, abst, image):$/;"	kind:function	line:18
+get_segment	../segment_search.py	/^def get_segment(i, j, abst, image):$/;"	kind:function	line:31
 img1	../other_algorithms/orb_example.py	/^img1 = cv2.imread('..\/images\/2.png', 0)$/;"	kind:variable	line:5
-img1	../segment_search.py	/^img1 = cv2.imread('.\/images\/1.png', 0) # A$/;"	kind:variable	line:70
+img1	../segment_search.py	/^img1 = cv2.imread('.\/images\/A.png', 0) # A$/;"	kind:variable	line:92
 img2	../other_algorithms/orb_example.py	/^img2 = cv2.imread('..\/images\/1.png', 0)$/;"	kind:variable	line:6
-img2	../segment_search.py	/^img2 = cv2.imread('.\/images\/4.png', 0) # B$/;"	kind:variable	line:71
+img2	../segment_search.py	/^img2 = cv2.imread('.\/images\/B.png', 0) # B$/;"	kind:variable	line:93
 img3	../other_algorithms/orb_example.py	/^img3 = cv2.drawMatches(img1,kp1,img2,kp2,matches[:10], flags=2, outImg=None)$/;"	kind:variable	line:34
-img3	../segment_search.py	/^            img3 = cv2.drawMatchesKnn(img1,A_keypoints,segment,segment_keypoints,matches,None,**draw_params)$/;"	kind:variable	line:112
+img3	../segment_search.py	/^                img3 = cv2.drawMatches(img1,A_keypoints,segment,segment_keypoints,good,None,**draw_params)$/;"	kind:variable	line:151
 kp1	../other_algorithms/orb_example.py	/^kp1 = orb.detect(img1, None)$/;"	kind:variable	line:12
 kp2	../other_algorithms/orb_example.py	/^kp2 = orb.detect(img2, None)$/;"	kind:variable	line:13
 matches	../other_algorithms/orb_example.py	/^matches = bf.match(des1,des2)$/;"	kind:variable	line:28
 matches	../other_algorithms/orb_example.py	/^matches = sorted(matches, key = lambda x:x.distance)$/;"	kind:variable	line:31
-matchesMask	../segment_search.py	/^                            matchesMask = matchesMask,$/;"	kind:variable	line:109
+matchesMask	../segment_search.py	/^                                matchesMask = matchesMask, # draw only inliers$/;"	kind:variable	line:148
+matchesMask	../segment_search.py	/^                matchesMask = None$/;"	kind:variable	line:156
+matchesMask	../segment_search.py	/^                matchesMask = mask.ravel().tolist()$/;"	kind:variable	line:139
 math	../utils/utils.py	/^import math$/;"	kind:namespace	line:5
-max_dim	../segment_search.py	/^max_dim = 184$/;"	kind:variable	line:13
+max_dim	../segment_search.py	/^max_dim = 184$/;"	kind:variable	line:24
 np	../other_algorithms/orb_example.py	/^import numpy as np$/;"	kind:namespace	line:1
-np	../segment_search.py	/^import numpy as np$/;"	kind:namespace	line:8
+np	../segment_search.py	/^import numpy as np$/;"	kind:namespace	line:19
 np	../utils/utils.py	/^import numpy as np$/;"	kind:namespace	line:4
 orb	../other_algorithms/orb_example.py	/^orb = cv2.ORB_create(WTA_K=2, nfeatures=1000, nlevels=8, scaleFactor=1.2, patchSize=31, edgeThreshold=31)$/;"	kind:variable	line:9
-orb	../segment_search.py	/^orb = cv2.ORB_create(WTA_K=2, nfeatures=1000, nlevels=8, scaleFactor=1.2, patchSize=4, edgeThreshold=4)$/;"	kind:variable	line:77
+orb	../segment_search.py	/^orb = cv2.ORB_create(WTA_K=4, nfeatures=1000, nlevels=4, scaleFactor=1.1, patchSize=4, edgeThreshold=4)$/;"	kind:variable	line:99
 orb_example.py	../other_algorithms/orb_example.py	1;"	kind:file	line:1
 plt	../other_algorithms/orb_example.py	/^from matplotlib import pyplot as plt$/;"	kind:namespace	line:3
 print_info	../utils/utils.py	/^def print_info(cl, ctx):$/;"	kind:function	line:64
-segment	../segment_search.py	/^            segment = get_segment(i, j, abst, transform)$/;"	kind:variable	line:92
-segment_and_transform	../segment_search.py	/^from utils.utils import segment_and_transform$/;"	kind:namespace	line:10
+pts	../segment_search.py	/^                pts = np.float32([ [0,0],[0,h-1],[w-1,h-1],[w-1,0] ]).reshape(-1,1,2)$/;"	kind:variable	line:142
+segment	../segment_search.py	/^                segment = cv2.polylines(segment,[np.int32(dst)],True,100,3, cv2.LINE_AA)$/;"	kind:variable	line:145
+segment	../segment_search.py	/^            segment = get_segment(i, j, abst, transform)$/;"	kind:variable	line:114
+segment_and_transform	../segment_search.py	/^from utils.utils import segment_and_transform$/;"	kind:namespace	line:21
 segment_and_transform	../utils/utils.py	/^def segment_and_transform(source_image, destination_segments, abst=92):$/;"	kind:function	line:22
-segment_keypoints	../segment_search.py	/^            segment_keypoints = orb.detect(segment, None)$/;"	kind:variable	line:95
-segment_range	../segment_search.py	/^segment_range = range(dim)$/;"	kind:variable	line:16
+segment_keypoints	../segment_search.py	/^            segment_keypoints = orb.detect(segment, None)$/;"	kind:variable	line:117
+segment_range	../segment_search.py	/^segment_range = range(dim)$/;"	kind:variable	line:27
 segment_search.py	../segment_search.py	1;"	kind:file	line:1
-singlePointColor	../segment_search.py	/^                            singlePointColor = (255,0,0),$/;"	kind:variable	line:108
+singlePointColor	../segment_search.py	/^                                singlePointColor = None,$/;"	kind:variable	line:147
+src_pts	../segment_search.py	/^                src_pts = np.float32([ A_keypoints[m.queryIdx].pt for m in good ]).reshape(-1,1,2)$/;"	kind:variable	line:132
 transform_image	../utils/utils.py	/^def transform_image(ctx, queue, abst, image):$/;"	kind:function	line:35
 utils.py	../utils/utils.py	1;"	kind:file	line:1

@@ -5,13 +5,24 @@
 # Read in two images A and B, regularly segment B
 # Using ORB find best correlation in A for each segment in B
 
+# Correspondence arises from the process of elimination
+# where better parts are matched on their own merit, and
+# others are matched as a consequence.
+
+# A square of exact dimension in A and B corresponds on intrinsic merit.
+# A star and lambda, encased in the squares, correspond only because they are orphans.
+# And because there is no intrinsic relationship between them - i.e. a default.
+
+# The process of solving these problems is not a reasoning process that occurs subconciously
+# and therefore cannot appeal to subconcious processes.
+
 import numpy as np
 import cv2
 from utils.utils import segment_and_transform
 from PIL import Image
 
 max_dim = 184
-abst = 92
+abst = 46
 dim = int(max_dim / abst)
 segment_range = range(dim)
 
@@ -51,14 +62,18 @@ def flan_matches(source_descriptors, destination_descriptors):
     # FLANN parameters
     FLANN_INDEX_LSH = 6
     index_params= dict(algorithm = FLANN_INDEX_LSH,
-                   table_number = 6, # 12
-                   key_size = 12,     # 20
+                   table_number = 6,
+                   key_size = 12,
                    multi_probe_level = 1) #2    search_params = dict(checks=50)   # or pass empty dictionary
     search_params = dict(checks=50)   # or pass empty dictionary
 
     flann = cv2.FlannBasedMatcher(index_params,search_params)
 
     matches = flann.knnMatch(source_descriptors, destination_descriptors,k=2)
+
+    if len(matches) == 0:
+        print("No matches found.")
+        return [],[]
 
     # Need to draw only good matches, so create a mask
     #matchesMask = [[0,0] for i in range(len(matches))]
@@ -74,14 +89,14 @@ def flan_matches(source_descriptors, destination_descriptors):
             good.append(m)
     return matches, good
 
-img1 = cv2.imread('./images/1.png', 0) # A
-img2 = cv2.imread('./images/4.png', 0) # B
+img1 = cv2.imread('./images/A.png', 0) # A
+img2 = cv2.imread('./images/B.png', 0) # B
 
 # Segment and transform Images.
 A, B = segment_and_transform(np.asarray(img1, dtype=np.float32), np.asarray(img2, dtype=np.float32), abst=abst)
 
 # Initiate STAR detector - 4 pixels supports orthonomal transforms.
-orb = cv2.ORB_create(WTA_K=2, nfeatures=1000, nlevels=8, scaleFactor=1.2, patchSize=4, edgeThreshold=4)
+orb = cv2.ORB_create(WTA_K=2, nfeatures=1000, nlevels=4, scaleFactor=1.2, patchSize=4, edgeThreshold=4)
 
 # Find keypoints in A.
 A_keypoints = orb.detect(img1, None)
@@ -92,7 +107,7 @@ if len(A_keypoints) == 0:
     exit(0)
 
 # For each segmented tranformation in B:
-for transform in B:
+for index, transform in enumerate(B):
     for i in segment_range:
         for j in segment_range:
             # For each segment:
@@ -108,6 +123,7 @@ for transform in B:
                 print( 'No features detected -  no matching.')
                 continue
 
+            print("Features found.")
             matches, good = flan_matches(A_descriptors, segment_descriptors)
 
             # If there are matches, determine the locality of the segment.
@@ -117,24 +133,26 @@ for transform in B:
                 dst_pts = np.float32([ segment_keypoints[m.trainIdx].pt for m in good ]).reshape(-1,1,2)
 
                 M, mask = cv2.findHomography(src_pts, dst_pts, cv2.RANSAC,5.0)
+                if M is None:
+                    print("No homography.")
+                    continue
                 matchesMask = mask.ravel().tolist()
 
                 h,w = img1.shape
                 pts = np.float32([ [0,0],[0,h-1],[w-1,h-1],[w-1,0] ]).reshape(-1,1,2)
                 dst = cv2.perspectiveTransform(pts,M)
 
-                segment = cv2.polylines(segment,[np.int32(dst)],True,255,3, cv2.LINE_AA)
+                segment = cv2.polylines(segment,[np.int32(dst)],True,100,3, cv2.LINE_AA)
                 draw_params = dict(matchColor = (0,255,0), # draw matches in green color
                                 singlePointColor = None,
                                 matchesMask = matchesMask, # draw only inliers
                                 flags = 2)
 
                 img3 = cv2.drawMatches(img1,A_keypoints,segment,segment_keypoints,good,None,**draw_params)
+                filename = "transform_{}_keypoints_match_{}_{}.png".format(index, i, j)
+                cv2.imwrite(filename,img3)
             else:
                 print("Not enough matches are found - %d/%d" % (len(good),MIN_MATCH_COUNT))
                 matchesMask = None
 
-            #filename = "{}_keypoints_match_{}.png".format(i, j)
-            #cv2.imwrite(filename,img3)
     # Consider a single transformation for now.
-    exit(0)
